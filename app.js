@@ -2,9 +2,11 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-// const logger = require('morgan');
-// const logger = require('./logger');
-const logger = require('./log')
+const session = require('express-session');
+const nunjucks = require('nunjucks');
+
+const logger = require('./log');
+const { sequelize } = require('./models');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -13,13 +15,29 @@ const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'html');
+nunjucks.configure('views', {
+  express: app,
+  watch: true
+})
+sequelize.sync({ force: false })
+  .then(() => {
+    console.log('데이터베이스 성공');
+  })
+  .catch(err => {
+    console.error(err);
+  })
 
-// app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}));
 
 app.use(logger());
 

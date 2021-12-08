@@ -30,22 +30,31 @@ const generatorId = (length = 6) => {
 
 const logger = () => (req, res, next) => {
   const { method, url } = req;
-  const now = moment().format('MMM/DD/YY kk:mm:ss.SSS');
+
+  // # date and time
+  // const now = moment().format('MMM/DD/YY kk:mm:ss.SSS');
   const date = moment().format('MMM/DD/YY');
   const time = moment().format('kk:mm:ss.SS');
-
   const datetime = `${chalk.blue.bold(date)} ${chalk.cyan.bold(time)}`;
 
+  // # identifier
   const id = generatorId();
-
   const identifier = `${chalk.hex(`#${Math.floor(Math.random()*16777215).toString(16)}`).bold(id)}`;
+  if(!req.session?.identifier) {
+    req.session.identifier = identifier;
+  }
 
+  // # log contents
   const logMethod = `${methodColorMap[method.toLowerCase()]}${method}${colors.reset}`;
 
   const contents = `${logMethod} ${url}`;
 
+
+  // # write log
   const log = `[${datetime}] [${identifier}] ${contents}`
-  console.log(log);
+  console.log('custom log', log);
+  console.log(req.session.identifier);
+
   next();
 }
 
