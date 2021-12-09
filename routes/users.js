@@ -30,8 +30,9 @@ router.put('/', function(req, res, next) {
   res.send('sucess');
 });
 
-router.patch('/', async function(req, res, next) {
-  const result = await connection.query(`UPDATE users SET comment='mysql2' WHERE id = 5;`, function(err, row, fields) {
+router.patch('/', function(req, res, next) {
+  console.log(123)
+  const result = pool.execute(`UPDATE users SET comment='mysql22' WHERE id = 5;`, function(err, row, fields) {
     console.log(1, err);
     console.log(2, row);
     console.log(3, fields);

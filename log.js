@@ -15,6 +15,7 @@ const methodColorMap = {
   post: colors.cyan,
   put: colors.yellow,
   delete: colors.red,
+  etc: colors.reset
 }
 
 const generatorId = (length = 6) => {
@@ -45,7 +46,7 @@ const logger = () => (req, res, next) => {
   }
 
   // # log contents
-  const logMethod = `${methodColorMap[method.toLowerCase()]}${method}${colors.reset}`;
+  const logMethod = `${methodColorMap[method.toLowerCase()] || methodColorMap.etc}${method}${colors.reset}`;
 
   const contents = `${logMethod} ${url}`;
 
