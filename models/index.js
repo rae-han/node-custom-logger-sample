@@ -14,15 +14,12 @@ const db = {};
 //   logging: false,
 // }
 
-const logging = (log1, log2) => {
-  console.log(1, log1)
-  console.log(2, session.identifier)
-  console.log(3, log2);
-  logger();
-}
+const logging = console.log;
 
 const sequelize = new Sequelize(config.database, config.username, config.password, {
-  ...config, logging
+  ...config, 
+  logQueryParameters: true,
+  logging: (...msg) => console.log(msg)
 });
 
 db.sequelize = sequelize;

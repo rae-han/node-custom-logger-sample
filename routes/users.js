@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-const { User } = require('../models')
+const { User } = require('../models');
+const { connection, pool } = require('../db/index');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -27,6 +28,19 @@ router.put('/', function(req, res, next) {
   })
 
   res.send('sucess');
+});
+
+router.patch('/', async function(req, res, next) {
+  const result = await connection.query(`UPDATE users SET comment='mysql2' WHERE id = 5;`, function(err, row, fields) {
+    console.log(1, err);
+    console.log(2, row);
+    console.log(3, fields);
+  });
+
+  console.log(4, result)
+
+  res.send('sucess');
+
 })
 
 module.exports = router;
