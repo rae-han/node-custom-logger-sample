@@ -29,8 +29,6 @@ const generatorId = (length = 6) => {
 }
 
 const writeLog = (req, text = '') => {
-  const { method, url } = req;
-
   // # date and time
   // const now = moment().format('MMM/DD/YY kk:mm:ss.SSS');
   const date = moment().format('MMM/DD/YY');
@@ -44,19 +42,17 @@ const writeLog = (req, text = '') => {
     req.session.identifier = identifier;
   }
 
-  // # log contents
-  const logMethod = `${methodColorMap[method.toLowerCase()] || methodColorMap.etc}${method}${colors.reset}`;
-
-  const contents = `${logMethod} ${url}`;
-
-
   // # write log
-  const log = `[${datetime}] [${req.session.identifier}] ${contents} ${text}`
+  const log = `[${datetime}] [${req.session.identifier}] ${text}`
   console.log(log)
 }
 
 const middlewareLog = (text = '') => (req, res, next) => {
-  writeLog(req);
+  const { method, url } = req;
+  const logMethod = `${methodColorMap[method.toLowerCase()] || methodColorMap.etc}${method}${colors.reset}`;
+  const text = `${logMethod} ${url}`;
+
+  writeLog(req, text);
   next();
 }
 
