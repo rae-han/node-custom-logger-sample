@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const nunjucks = require('nunjucks');
 
-const logger = require('./log');
+const { middlewareLog } = require('./log');
 const { sequelize } = require('./models');
 
 const indexRouter = require('./routes/index');
@@ -39,7 +39,7 @@ app.use(session({
   cookie: { secure: true }
 }));
 
-app.use(logger());
+app.use(middlewareLog());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

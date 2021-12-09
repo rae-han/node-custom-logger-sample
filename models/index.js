@@ -14,12 +14,12 @@ const db = {};
 //   logging: false,
 // }
 
-const logging = console.log;
+const logging = () => {};
 
 const sequelize = new Sequelize(config.database, config.username, config.password, {
   ...config, 
   logQueryParameters: true,
-  logging: (...msg) => console.log(msg)
+  logging
 });
 
 db.sequelize = sequelize;

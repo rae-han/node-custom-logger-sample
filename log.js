@@ -1,6 +1,5 @@
 const moment = require('moment');
 const chalk = require('chalk');
-const log = console.log;
 
 const colors = {
   green: "\x1b[32m",
@@ -29,7 +28,7 @@ const generatorId = (length = 6) => {
   return result.join('');
 }
 
-const logger = () => (req, res, next) => {
+const writeLog = (req, text = '') => {
   const { method, url } = req;
 
   // # date and time
@@ -40,8 +39,8 @@ const logger = () => (req, res, next) => {
 
   // # identifier
   const id = generatorId();
-  const identifier = `${chalk.hex(`#${Math.floor(Math.random()*16777215).toString(16)}`).bold(id)}`;
   if(!req.session?.identifier) {
+    const identifier = `${chalk.hex(`#${Math.floor(Math.random()*16777215).toString(16)}`).bold(id)}`;
     req.session.identifier = identifier;
   }
 
@@ -52,14 +51,19 @@ const logger = () => (req, res, next) => {
 
 
   // # write log
-  const log = `[${datetime}] [${identifier}] ${contents}`
-  console.log('custom log', log);
-  console.log(req.session.identifier);
+  const log = `[${datetime}] [${req.session.identifier}] ${contents} ${text}`
+  console.log(log)
+}
 
+const middlewareLog = (text = '') => (req, res, next) => {
+  writeLog(req);
   next();
 }
 
-module.exports = logger;
+module.exports = {
+  writeLog,
+  middlewareLog,
+};
 
 
 /*
